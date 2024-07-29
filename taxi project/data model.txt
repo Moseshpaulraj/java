@@ -1,0 +1,37 @@
+TAXI BOOKING REQIREMENTS
+
+signup -> 
+login  -> taxi booking , logout 
+admin -> taxi details ,  taxi history , driver details , user details ,payment
+ 
+
+DATA MODEL 
+
+userdetails :
+	userId(PK),userName,phoneNo,password
+driverdetails :
+	driverId(pk),driverName,licenceno,phoneno
+taxidetails :
+	taxiId (pk),taxiname,driverid(FK),currentLication,free time,isAvailable
+tripdetails :
+	tripid(pk),userid(FK),taxiid(Fk),from,to,fare 
+paymentdetails :
+   id(pk),tripid(fk),earnings
+	
+MAP :
+                           _____*Chennai
+                       ___/              |
+                     _/                  |
+                *Salem              *Puducherry
+                  /	                  /
+             ___/   	             /
+     *Coimbatore			    *Thanjavur
+             \		               /
+              \__		          /
+                 \	 	         |
+               *Madurai	         |
+                   |             /
+                    \           /
+                     \      *Thoothukudi
+              *Tirunelveli    /
+                       \_ _ _/

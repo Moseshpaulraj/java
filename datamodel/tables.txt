@@ -1,0 +1,21 @@
+select * from bookingdetails;
+
+busdetails
+users
+busdrivermapping
+busroutemapping
+busseatgroupmappings
+busstatus
+driverdetails
+gender
+locations
+passangerdetails
+pickupanddrop
+route
+routemapping
+seats
+userpasswordmapping
+seatgroup
+seattype
+usertype
+userstatus

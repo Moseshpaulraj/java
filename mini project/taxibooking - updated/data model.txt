@@ -1,0 +1,48 @@
+create table user_details(
+id bigserial primary key,
+name varchar(25)unique not null,
+password varchar(255) not null
+);
+
+create table admin_details(
+id serial primary key,
+name varchar(25) not null,
+password varchar(255) not null
+);
+
+create table driver_details(
+id serial primary key,
+name varchar(25) not null,
+licenceno varchar(15) not null,
+phoneno varchar(14) not null
+);
+
+create table taxi_details(
+id serial primary key,
+name varchar(25) not null,	
+current_location varchar(30) not null,
+isavailable boolean default true,
+driver_id integer references driver_details(id)
+);
+
+create table trip_details(
+id bigserial primary key,
+booking_time timestamp not null,
+pickup_time timestamp not null,
+from_location varchar(50) not null,
+to_location varchar(50) not null
+);
+
+create table booking_details(
+id bigserial primary key,
+user_id integer references user_details(id),
+taxi_id integer references taxi_details(id),
+trip_id bigint references trip_details(id),
+unique(id,taxi_id)
+);
+
+create table payment_details(
+id bigserial primary key,
+booking_id bigint references booking_details(id),
+amount decimal(10,2) not null
+);

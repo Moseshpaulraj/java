@@ -1,0 +1,124 @@
+create table UserType (
+	id bigserial primary key,
+	type varchar(8) check (type in ('customer', 'admin', 'driver')) not null
+);
+
+create table UserStatus (
+	id bigserial primary key,
+	status varchar(10) check (status in ('ACTIVE', 'RESIGNED')) not null
+);
+
+create table Users (
+	id bigserial primary key,
+	name varchar(25) not null,
+	phone_number varchar(15) unique not null,
+	type_id smallint references UserType(id),
+	status_id smallint default 1 references UserStatus(id)
+);
+
+create table UserPasswordMapping (
+	user_id bigserial primary key references Users(id),
+	password varchar(255) not null
+);
+
+create table DriverDetails (
+	user_id bigint primary key references Users(id),
+	licence_number varchar(15) unique not null
+);
+
+create table Locations (
+	id smallserial primary key,
+	name varchar(50) not null
+);
+
+create table Route (
+	id smallserial primary key,
+	from_id smallint references locations(id),
+	to_id smallint references locations(id)
+);
+
+create table RouteMapping (
+	id bigserial primary key,
+	route_id smallint references Route(id),
+	location_id smallint references locations(id),
+	stop_number smallint not null,
+	unique (route_id,location_id)
+);
+
+create table PickupAndDrop (
+	id bigserial primary key,
+	district smallint references locations(id),
+	stops smallint references locations(id)
+);
+
+create table BusStatus (
+	id bigserial primary key,
+	status varchar(15) check (status in ('available', 'unavailable', 'deleted')) not null
+);
+
+create table BusDetails (
+	id serial primary key,
+	reg_no varchar(11) not null,
+	has_ac boolean default false,
+	status smallint references BusStatus(id),
+	current_location smallint not null references Locations(id)
+);
+
+create table BusDriverMapping (
+	bus_id smallint primary key references BusDetails(id),
+	driver_id smallint references DriverDetails(user_id)
+);
+
+create table BusRouteMapping (
+	bus_id smallint primary key references BusDetails(id),
+	route_id smallint references route(id),
+	departure_time timestamp not null,
+	arival_time timestamp not null
+);
+
+create table SeatGroup (
+	id smallserial primary key,
+	group_name varchar(10) check (group_name in('sleeper','semi-sleeper','combined'))
+);
+
+create table SeatType (
+	id smallserial primary key,
+	seat_type varchar(12) check (seat_type in ('sleeper', 'semi-sleeper')) not null
+);
+
+create table Seats (
+	id serial primary key,
+	seat_number varchar(3) not null,
+	seat_type smallint references SeatType(id),
+	group_id smallint references SeatGroup(id)
+);
+
+create table BusSeatGroupMappings (
+	bus_id smallint primary key references BusDetails(id),
+	group_id smallint references SeatGroup(id),
+);
+
+create table BookingDetails (
+	id bigserial primary key,
+	user_id bigint references Users(id),
+	bus_id integer references BusDetails(id),
+	driver_id bigint references DriverDetails(user_id),
+	bording_point smallint references locations(id),
+	droping_point smallint references locations(id),
+	booking_date date not null,
+	amount decimal(10,2) not null
+);
+
+create table PassangerDetails (
+	id bigserial primary key,
+	booking_id bigint references BookingDetails(id),
+	name varchar(50) not null,
+	age smallint not null,
+	gender_id smallint references gender(id),
+	seat_number varchar(3) not null,
+);
+
+create table Gender (
+	id smallserial primary key,
+	gender varchar(10) check (gender in ('male', 'female', 'others')) not null
+);
